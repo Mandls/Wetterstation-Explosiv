@@ -1,13 +1,13 @@
 from pydantic import BaseModel
 
 class Temperature(BaseModel):
-    temperature: float
+    temperature: list[int]
 
 class Humidity(BaseModel):
-    humidity: float
+    humidity: list[int]
 
 class Flame(BaseModel):
-    flame_nearby: bool
+    flame_nearby: list[int]
 
 class Gas(BaseModel):
-    gas_amount: float
+    gas_amount: list[int]

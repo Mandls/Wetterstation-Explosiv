@@ -10,12 +10,19 @@ from app.crud.data import add_data
 
 
 def extract_payload(payload):
-    sensor = payload.get("sensor")
-    data = payload.get("data")
+    if not isinstance(payload, dict):
+        print(f"[ERROR] Payload is not a dict: {payload}")
+        return None, None
 
-    add_data(sensor, data)
+    for sensor, data in payload.items():
+        if data is None:
+            print(f"[WARNING] Skipping {sensor}: value is None")
+            continue
+        add_data(sensor, data)
+        print(f"[MQTT] Added {sensor} = {data} to Redis")
 
-    return sensor, data
+    return None, None  # since we're adding all sensors individually
+
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connect with result code {rc}")

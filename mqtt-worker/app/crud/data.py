@@ -15,11 +15,12 @@ def get_data(sensor: str):
         if not redis_connection.exists(sensor):
             raise MacNotFound(
                 message=("No Sensor with this name exists or no data yet exist. "
-                    "If you think it should exist, please send new MQTT data.")
+                    "If you think it should exist, please send new MQTT data."),
+                error_code=404
             )
 
         # Only get newest timestamp
-        return redis_connection.lrange(sensor, -1, -10)
+        return redis_connection.lrange(sensor, -10, -1)
 
 def delete_data(sensor: str):
     with redis_lock:
@@ -27,7 +28,8 @@ def delete_data(sensor: str):
         if not redis_connection.exists(sensor):
             raise MacNotFound(
                 message=("No Sensor with this name exists or no data yet exist. "
-                    "If you think it should exist, please send new MQTT data.")
+                    "If you think it should exist, please send new MQTT data."),
+                error_code=404,
             )
 
         # Delete all timestamps for this MAC
